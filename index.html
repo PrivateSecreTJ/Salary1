@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Personal Salary Calculator</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         背景
+    ====================================================== -->
+
+    <div class="background-decoration">
+
+        <div class="bg-grid"></div>
+
+        <div class="bg-circle bg-circle-1"></div>
+
+        <div class="bg-circle bg-circle-2"></div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         主畫面
+    ====================================================== -->
+
+    <main class="app-container">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <header class="top-header">
+
+            <div class="brand-area">
+
+                <div class="brand-icon">
+                    $
+                </div>
+
+
+                <div>
+
+                    <div class="brand-small">
+                        PERSONAL SALARY SYSTEM
+                    </div>
+
+                    <h1>
+                        個人薪資計算系統
+                    </h1>
+
+                    <p>
+                        Personal Salary Calculator
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="header-status">
+
+                <span class="status-dot"></span>
+
+                Local Mode
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             01 個人資料
+        ================================================== -->
+
+        <section class="panel">
+
+            <div class="section-title-row">
+
+                <div>
+
+                    <span class="section-number">
+                        01
+                    </span>
+
+                    <h2>
+                        個人資料
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="saveStatus"
+                    class="save-status"
+                >
+                    尚未載入資料
+                </div>
+
+            </div>
+
+
+
+            <div class="login-grid">
+
+
+                <!-- 工號 -->
+
+                <div class="form-group">
+
+                    <label for="employeeId">
+
+                        工號
+
+                        <span class="required-mark">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="employeeId"
+                        autocomplete="off"
+                        placeholder="請輸入工號"
+                    >
+
+                </div>
+
+
+
+                <!-- 驗證碼 -->
+
+                <div class="form-group">
+
+                    <label for="verificationCode">
+
+                        驗證碼
+
+                        <span class="required-mark">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <input
+                        type="password"
+                        id="verificationCode"
+                        autocomplete="off"
+                        placeholder="請輸入驗證碼"
+                    >
+
+                </div>
+
+
+
+                <!-- 身分類型 -->
+
+                <div class="form-group">
+
+                    <label for="employeeType">
+
+                        身分類型
+
+                        <span class="required-mark">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <select id="employeeType">
+
+                        <option value="">
+                            請選擇身分類型
+                        </option>
+
+                        <option value="regular-day">
+                            正職日班
+                        </option>
+
+                        <option value="regular-night">
+                            正職夜班
+                        </option>
+
+                        <option value="agency-day">
+                            派遣日班
+                        </option>
+
+                        <option value="agency-night">
+                            派遣夜班
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- 按鈕 -->
+
+                <div class="login-buttons">
+
+                    <button
+                        type="button"
+                        id="loadDataBtn"
+                        class="btn btn-secondary"
+                    >
+                        載入資料
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="saveDataBtn"
+                        class="btn btn-primary"
+                    >
+                        儲存資料
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="local-note">
+
+                資料只會儲存在目前瀏覽器的本機儲存空間。
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             02 計薪週期
+        ================================================== -->
+
+        <section class="panel">
+
+            <div class="section-title-row">
+
+                <div>
+
+                    <span class="section-number">
+                        02
+                    </span>
+
+                    <h2>
+                        計薪週期
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="period-row">
+
+
+                <div class="form-group">
+
+                    <label for="periodStart">
+                        開始日期
+                    </label>
+
+                    <input
+                        type="date"
+                        id="periodStart"
+                    >
+
+                </div>
+
+
+
+                <div class="period-arrow">
+                    →
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label for="periodEnd">
+                        結束日期
+                    </label>
+
+                    <input
+                        type="date"
+                        id="periodEnd"
+                    >
+
+                </div>
+
+
+
+                <button
+                    type="button"
+                    id="generateCalendarBtn"
+                    class="btn btn-primary"
+                >
+                    產生日曆
+                </button>
+
+            </div>
+
+
+
+            <div class="period-info">
+
+                <span id="periodRuleText">
+                    請先選擇身分類型
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             03 正職薪資設定
+        ================================================== -->
+
+        <section
+            id="regularSalarySettings"
+            class="panel hidden"
+        >
+
+            <div class="section-title-row">
+
+                <div>
+
+                    <span class="section-number">
+                        03
+                    </span>
+
+                    <h2>
+                        薪資基本設定
+                    </h2>
+
+                </div>
+
+
+                <span class="section-tag">
+                    正職
+                </span>
+
+            </div>
+
+
+
+            <div class="salary-setting-columns">
+
+
+                <!-- =============================
+                     薪資組成
+                ============================== -->
+
+                <div class="setting-card">
+
+                    <div class="setting-card-title">
+                        薪資組成
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="baseSalary">
+
+                            底薪
+
+                            <span class="required-mark">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="money-input">
+
+                            <span>
+                                $
+                            </span>
+
+                            <input
+                                type="number"
+                                id="baseSalary"
+                                min="0"
+                                step="1"
+                                placeholder="請輸入底薪"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="mealAllowance">
+                            伙食津貼
+                        </label>
+
+
+                        <div class="money-input">
+
+                            <span>
+                                $
+                            </span>
+
+                            <input
+                                type="number"
+                                id="mealAllowance"
+                                value="3000"
+                                readonly
+                            >
+
+                        </div>
+
+
+                        <small>
+                            固定 3,000 元
+                        </small>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="attendanceBonus">
+
+                            全勤獎金
+
+                            <span class="required-mark">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="money-input">
+
+                            <span>
+                                $
+                            </span>
+
+                            <input
+                                type="number"
+                                id="attendanceBonus"
+                                min="0"
+                                step="1"
+                                placeholder="請輸入全勤獎金"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =============================
+                     薪資扣項
+                ============================== -->
+
+                <div class="setting-card">
+
+                    <div class="setting-card-title">
+                        薪資扣項
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="laborInsurance">
+
+                            勞保費
+
+                            <span class="required-mark">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="money-input">
+
+                            <span>
+                                $
+                            </span>
+
+                            <input
+                                type="number"
+                                id="laborInsurance"
+                                min="0"
+                                step="1"
+                                placeholder="請輸入勞保費"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="healthInsurance">
+
+                            健保費
+
+                            <span class="required-mark">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="money-input">
+
+                            <span>
+                                $
+                            </span>
+
+                            <input
+                                type="number"
+                                id="healthInsurance"
+                                min="0"
+                                step="1"
+                                placeholder="請輸入健保費"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             03 派遣薪資設定
+        ================================================== -->
+
+        <section
+            id="agencySalarySettings"
+            class="panel hidden"
+        >
+
+            <div class="section-title-row">
+
+                <div>
+
+                    <span class="section-number">
+                        03
+                    </span>
+
+                    <h2>
+                        派遣薪資設定
+                    </h2>
+
+                </div>
+
+
+                <span class="section-tag">
+                    派遣
+                </span>
+
+            </div>
+
+
+
+            <div class="agency-setting-grid">
+
+
+                <!-- 常態時薪 -->
+
+                <div class="form-group">
+
+                    <label for="agencyHourlyRate">
+
+                        常態時薪
+
+                        <span class="required-mark">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <div class="money-input">
+
+                        <span>
+                            $
+                        </span>
+
+                        <input
+                            type="number"
+                            id="agencyHourlyRate"
+                            min="0"
+                            step="1"
+                            placeholder="請輸入常態時薪"
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 每小時出勤津貼 -->
+
+                <div class="form-group">
+
+                    <label for="attendanceHourlyAllowance">
+
+                        每小時出勤津貼
+
+                        <span class="required-mark">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <div class="money-input">
+
+                        <span>
+                            $
+                        </span>
+
+                        <input
+                            type="number"
+                            id="attendanceHourlyAllowance"
+                            min="0"
+                            step="1"
+                            placeholder="請輸入每小時出勤津貼"
+                        >
+
+                    </div>
+
+
+                    <small>
+                        請假時不會取得該時數的出勤津貼
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================
+                 自動倍率
+            ============================== -->
+
+            <div class="rate-section">
+
+                <div class="rate-section-title">
+                    自動計算加班費率
+                </div>
+
+
+                <div class="rate-grid">
+
+
+                    <div class="rate-card">
+
+                        <span class="rate-name">
+                            1.34 倍
+                        </span>
+
+                        <strong id="agencyRate134">
+                            —
+                        </strong>
+
+                        <small>
+                            元 / 小時
+                        </small>
+
+                    </div>
+
+
+
+                    <div class="rate-card">
+
+                        <span class="rate-name">
+                            1.67 倍
+                        </span>
+
+                        <strong id="agencyRate167">
+                            —
+                        </strong>
+
+                        <small>
+                            元 / 小時
+                        </small>
+
+                    </div>
+
+
+
+                    <div class="rate-card">
+
+                        <span class="rate-name">
+                            2 倍
+                        </span>
+
+                        <strong id="agencyRate200">
+                            —
+                        </strong>
+
+                        <small>
+                            元 / 小時
+                        </small>
+
+                    </div>
+
+
+
+                    <div class="rate-card">
+
+                        <span class="rate-name">
+                            2.67 倍
+                        </span>
+
+                        <strong id="agencyRate267">
+                            —
+                        </strong>
+
+                        <small>
+                            元 / 小時
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             04 日曆
+        ================================================== -->
+
+        <section
+            id="calendarSection"
+            class="panel hidden"
+        >
+
+            <div class="section-title-row">
+
+                <div>
+
+                    <span class="section-number">
+                        04
+                    </span>
+
+                    <h2>
+                        出勤日曆
+                    </h2>
+
+                </div>
+
+
+                <div class="calendar-period-display">
+
+                    <span id="calendarPeriodText">
+                        —
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================
+                 工具
+            ============================== -->
+
+            <div class="calendar-toolbar">
+
+                <button
+                    type="button"
+                    id="fullAttendanceBtn"
+                    class="btn btn-success"
+                >
+                    平日一鍵全勤
+                </button>
+
+
+                <button
+                    type="button"
+                    id="batchOvertimeBtn"
+                    class="btn btn-accent"
+                >
+                    批量匯入加班
+                </button>
+
+
+                <button
+                    type="button"
+                    id="clearCalendarBtn"
+                    class="btn btn-danger-outline"
+                >
+                    清除出勤資料
+                </button>
+
+            </div>
+
+
+
+            <!-- =============================
+                 顏色說明
+            ============================== -->
+
+            <div class="calendar-legend">
+
+                <div class="legend-item">
+
+                    <span class="legend-dot work-dot"></span>
+
+                    上班
+
+                </div>
+
+
+                <div class="legend-item">
+
+                    <span class="legend-dot leave-dot"></span>
+
+                    請假
+
+                </div>
+
+
+                <div class="legend-item">
+
+                    <span class="legend-dot overtime-dot"></span>
+
+                    加班
+
+                </div>
+
+
+                <div class="legend-item">
+
+                    <span class="legend-dot holiday-dot"></span>
+
+                    休息日 / 例假日 / 國定假日
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================
+                 星期
+            ============================== -->
+
+            <div class="calendar-week-header">
+
+                <div class="weekend-title">
+                    星期日
+                </div>
+
+                <div>
+                    星期一
+                </div>
+
+                <div>
+                    星期二
+                </div>
+
+                <div>
+                    星期三
+                </div>
+
+                <div>
+                    星期四
+                </div>
+
+                <div>
+                    星期五
+                </div>
+
+                <div class="weekend-title">
+                    星期六
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================
+                 JS 產生日曆
+            ============================== -->
+
+            <div
+                id="calendarGrid"
+                class="calendar-grid"
+            >
+            </div>
+
+
+
+            <div class="calendar-help">
+
+                點選日期即可設定當天上班、請假、加班或日期類型
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             計算
+        ================================================== -->
+
+        <section
+            id="calculationSection"
+            class="panel hidden"
+        >
+
+            <div class="calculate-area">
+
+                <button
+                    type="button"
+                    id="calculateSalaryBtn"
+                    class="btn calculate-button"
+                >
+                    計算本期薪資
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             05 薪資結果
+        ================================================== -->
+
+        <section
+            id="salaryResultSection"
+            class="panel result-panel hidden"
+        >
+
+            <div class="section-title-row">
+
+                <div>
+
+                    <span class="section-number">
+                        05
+                    </span>
+
+                    <h2>
+                        薪資計算結果
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="resultEmployeeType"
+                    class="result-type"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 薪資結構
+            ================================================== -->
+
+            <div class="result-group">
+
+                <h3>
+                    薪資結構
+                </h3>
+
+
+
+                <div
+                    id="baseSalaryResultRow"
+                    class="result-row"
+                >
+
+                    <span>
+                        底薪
+                    </span>
+
+                    <strong id="resultBaseSalary">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="mealAllowanceResultRow"
+                    class="result-row"
+                >
+
+                    <span>
+                        伙食津貼
+                    </span>
+
+                    <strong id="resultMealAllowance">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <!-- 派遣 -->
+
+                <div
+                    id="agencyNormalSalaryResultRow"
+                    class="result-row hidden"
+                >
+
+                    <span>
+                        正常工時薪資
+                    </span>
+
+                    <strong id="resultAgencyNormalSalary">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="agencyAttendanceAllowanceResultRow"
+                    class="result-row hidden"
+                >
+
+                    <span>
+                        出勤津貼
+                    </span>
+
+                    <strong id="resultAgencyAttendanceAllowance">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="result-row total-row">
+
+                    <span>
+                        薪資結構合計
+                    </span>
+
+                    <strong id="resultSalaryStructureTotal">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 薪資加項
+            ================================================== -->
+
+            <div class="result-group">
+
+                <h3>
+                    薪資加項
+                </h3>
+
+
+
+                <div
+                    id="attendanceBonusResultRow"
+                    class="result-row"
+                >
+
+                    <span>
+                        全勤獎金
+                    </span>
+
+                    <strong id="resultAttendanceBonus">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="overtimePayResultRow"
+                    class="result-row"
+                >
+
+                    <span>
+                        加班費
+                    </span>
+
+                    <strong id="resultOvertimePay">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="nightAllowanceResultRow"
+                    class="result-row hidden"
+                >
+
+                    <span>
+                        夜班津貼
+                    </span>
+
+                    <strong id="resultNightAllowance">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="breakfastAllowanceResultRow"
+                    class="result-row hidden"
+                >
+
+                    <span>
+                        加班誤餐費
+                    </span>
+
+                    <strong id="resultBreakfastAllowance">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="result-row total-row">
+
+                    <span>
+                        加項合計
+                    </span>
+
+                    <strong id="resultAdditionTotal">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 薪資扣項
+            ================================================== -->
+
+            <div class="result-group">
+
+                <h3>
+                    薪資扣項
+                </h3>
+
+
+
+                <div
+                    id="welfareFeeResultRow"
+                    class="result-row"
+                >
+
+                    <span>
+                        福利金
+                    </span>
+
+                    <strong id="resultWelfareFee">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="laborInsuranceResultRow"
+                    class="result-row"
+                >
+
+                    <span>
+                        勞保費
+                    </span>
+
+                    <strong id="resultLaborInsurance">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="healthInsuranceResultRow"
+                    class="result-row"
+                >
+
+                    <span>
+                        健保費
+                    </span>
+
+                    <strong id="resultHealthInsurance">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="leaveDeductionResultRow"
+                    class="result-row hidden"
+                >
+
+                    <span>
+                        假勤扣款
+                    </span>
+
+                    <strong id="resultLeaveDeduction">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="result-row total-row">
+
+                    <span>
+                        扣項合計
+                    </span>
+
+                    <strong id="resultDeductionTotal">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 加班明細
+            ================================================== -->
+
+            <div
+                id="overtimeDetailSection"
+                class="result-group overtime-detail-group hidden"
+            >
+
+                <h3>
+                    加班時數與加班費明細
+                </h3>
+
+
+
+                <!-- 平日 -->
+
+                <div
+                    id="weekdayOvertimeDetail"
+                    class="overtime-detail-card hidden"
+                >
+
+                    <div class="overtime-detail-title">
+                        一般工作日
+                    </div>
+
+
+                    <div class="detail-grid">
+
+                        <div>
+
+                            <span>
+                                1.34 倍
+                            </span>
+
+                            <strong id="weekday134Hours">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                1.67 倍
+                            </span>
+
+                            <strong id="weekday167Hours">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                總加班費
+                            </span>
+
+                            <strong id="weekdayOvertimePay">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 休息日 -->
+
+                <div
+                    id="restDayOvertimeDetail"
+                    class="overtime-detail-card hidden"
+                >
+
+                    <div class="overtime-detail-title">
+                        星期六 / 休息日
+                    </div>
+
+
+                    <div class="detail-grid">
+
+                        <div>
+
+                            <span>
+                                1.34 倍
+                            </span>
+
+                            <strong id="rest134Hours">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                1.67 倍
+                            </span>
+
+                            <strong id="rest167Hours">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                2.67 倍
+                            </span>
+
+                            <strong id="rest267Hours">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                總加班費
+                            </span>
+
+                            <strong id="restOvertimePay">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 國定假日 -->
+
+                <div
+                    id="nationalHolidayOvertimeDetail"
+                    class="overtime-detail-card hidden"
+                >
+
+                    <div class="overtime-detail-title">
+                        國定假日
+                    </div>
+
+
+                    <div class="detail-grid">
+
+                        <div>
+
+                            <span id="nationalBaseRateLabel">
+                                1 倍
+                            </span>
+
+                            <strong id="nationalBaseHours">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                1.34 倍
+                            </span>
+
+                            <strong id="national134Hours">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                1.67 倍
+                            </span>
+
+                            <strong id="national167Hours">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                總加班費
+                            </span>
+
+                            <strong id="nationalOvertimePay">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 例假日 -->
+
+                <div
+                    id="regularHolidayOvertimeDetail"
+                    class="overtime-detail-card hidden"
+                >
+
+                    <div class="overtime-detail-title">
+                        星期日 / 例假日
+                    </div>
+
+
+                    <div class="detail-grid">
+
+                        <div>
+
+                            <span>
+                                2 倍
+                            </span>
+
+                            <strong id="holiday200Hours">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                總加班費
+                            </span>
+
+                            <strong id="holidayOvertimePay">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 正職星期日額外獎金
+            ================================================== -->
+
+            <div
+                id="extraBonusSection"
+                class="result-group bonus-group hidden"
+            >
+
+                <h3>
+                    額外加班費獎金發放
+                </h3>
+
+
+
+                <div class="result-row">
+
+                    <span>
+                        例假日加班費
+                    </span>
+
+                    <strong id="resultHolidayBonus">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="holidayNightAllowanceRow"
+                    class="result-row hidden"
+                >
+
+                    <span>
+                        例假日夜班津貼
+                    </span>
+
+                    <strong id="resultHolidayNightAllowance">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="holidayMealAllowanceRow"
+                    class="result-row hidden"
+                >
+
+                    <span>
+                        例假日加班誤餐費
+                    </span>
+
+                    <strong id="resultHolidayMealAllowance">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="result-row total-row">
+
+                    <span>
+                        額外獎金合計
+                    </span>
+
+                    <strong id="resultExtraBonusTotal">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 最終結果
+            ================================================== -->
+
+            <div class="final-salary-area">
+
+
+                <div class="final-salary-card gross-card">
+
+                    <span>
+                        應領薪資
+                    </span>
+
+                    <strong id="grossSalary">
+                        —
+                    </strong>
+
+                    <small>
+                        Gross Pay
+                    </small>
+
+                </div>
+
+
+
+                <div class="final-salary-card net-card">
+
+                    <span>
+                        實領薪資
+                    </span>
+
+                    <strong id="netSalary">
+                        —
+                    </strong>
+
+                    <small>
+                        Net Pay
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         單日編輯視窗
+    ====================================================== -->
+
+    <div
+        id="dayModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-backdrop"></div>
+
+
+        <div class="modal-card">
+
+
+            <div class="modal-header">
+
+                <div>
+
+                    <div class="modal-small-title">
+                        DAILY ATTENDANCE
+                    </div>
+
+                    <h2 id="modalDateTitle">
+                        日期
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="closeDayModalBtn"
+                    class="modal-close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+
+            <div class="modal-body">
+
+
+                <!-- 日期類型 -->
+
+                <div class="form-group">
+
+                    <label for="dayType">
+                        日期類型
+                    </label>
+
+
+                    <select id="dayType">
+
+                        <option value="weekday">
+                            平日
+                        </option>
+
+                        <option value="rest">
+                            休息日
+                        </option>
+
+                        <option value="holiday">
+                            例假日
+                        </option>
+
+                        <option value="national">
+                            國定假日
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     平日設定
+                ================================================== -->
+
+                <div id="weekdayEditor">
+
+
+                    <!-- 上班 -->
+
+                    <div class="editor-section">
+
+                        <div class="editor-section-title work-text">
+                            上班
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="workHours">
+                                實際上班時數
+                            </label>
+
+
+                            <input
+                                type="number"
+                                id="workHours"
+                                min="0"
+                                max="8"
+                                step="0.5"
+                                placeholder="未出勤可留空"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- 請假 -->
+
+                    <div class="editor-section">
+
+                        <div class="editor-section-title leave-text">
+                            請假
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="leaveType">
+                                假別
+                            </label>
+
+
+                            <select id="leaveType">
+
+                                <option value="">
+                                    無請假
+                                </option>
+
+                                <option value="annual">
+                                    特休
+                                </option>
+
+                                <option value="personal">
+                                    事假
+                                </option>
+
+                                <option value="sick">
+                                    病假
+                                </option>
+
+                                <option value="menstrual">
+                                    生理假
+                                </option>
+
+                                <option value="family">
+                                    家庭照顧假
+                                </option>
+
+                                <option value="official">
+                                    公假
+                                </option>
+
+                                <option value="marriage">
+                                    婚假
+                                </option>
+
+                                <option value="bereavement">
+                                    喪假
+                                </option>
+
+                                <option value="occupational">
+                                    公傷假
+                                </option>
+
+                                <option value="maternity">
+                                    產假
+                                </option>
+
+                                <option value="prenatal">
+                                    產檢假
+                                </option>
+
+                                <option value="paternity">
+                                    陪產檢及陪產假
+                                </option>
+
+                                <option value="disaster">
+                                    天然災害假
+                                </option>
+
+                                <option
+                                    value="absence"
+                                    class="absence-option"
+                                >
+                                    曠職
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="leaveHours">
+                                請假時數
+                            </label>
+
+
+                            <input
+                                type="number"
+                                id="leaveHours"
+                                min="0"
+                                max="8"
+                                step="0.5"
+                                placeholder="請輸入請假時數"
+                            >
+
+                        </div>
+
+
+
+                        <div
+                            id="leavePayHint"
+                            class="leave-pay-hint hidden"
+                        >
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     加班
+                ================================================== -->
+
+                <div class="editor-section">
+
+                    <div class="editor-section-title overtime-text">
+                        加班
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="overtimeHours">
+                            加班時數
+                        </label>
+
+
+                        <input
+                            type="number"
+                            id="overtimeHours"
+                            min="0"
+                            max="24"
+                            step="0.5"
+                            placeholder="未加班可留空"
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    id="dayCalculationHint"
+                    class="day-calculation-hint"
+                >
+                </div>
+
+            </div>
+
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    id="deleteDayDataBtn"
+                    class="btn btn-danger-outline"
+                >
+                    恢復預設
+                </button>
+
+
+                <button
+                    type="button"
+                    id="saveDayDataBtn"
+                    class="btn btn-primary"
+                >
+                    儲存當日資料
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         批量加班
+    ====================================================== -->
+
+    <div
+        id="batchOvertimeModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-backdrop"></div>
+
+
+        <div class="modal-card batch-modal-card">
+
+
+            <div class="modal-header">
+
+                <div>
+
+                    <div class="modal-small-title">
+                        BATCH OVERTIME
+                    </div>
+
+                    <h2>
+                        批量匯入加班
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="closeBatchModalBtn"
+                    class="modal-close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+
+            <div class="modal-body">
+
+
+                <div class="batch-overtime-top">
+
+
+                    <div class="form-group">
+
+                        <label for="batchOvertimeHours">
+                            加班時數
+                        </label>
+
+
+                        <input
+                            type="number"
+                            id="batchOvertimeHours"
+                            min="0"
+                            max="24"
+                            step="0.5"
+                            placeholder="例如：2"
+                        >
+
+                    </div>
+
+
+
+                    <div class="batch-description">
+
+                        輸入一次加班時數，再一次選擇多個日期。
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="batch-select-tools">
+
+                    <button
+                        type="button"
+                        id="selectAllBatchDatesBtn"
+                        class="mini-button"
+                    >
+                        全選
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="selectWeekdaysBatchBtn"
+                        class="mini-button"
+                    >
+                        只選平日
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="clearBatchDatesBtn"
+                        class="mini-button"
+                    >
+                        清除選取
+                    </button>
+
+                </div>
+
+
+
+                <div
+                    id="batchDateList"
+                    class="batch-date-list"
+                >
+                </div>
+
+            </div>
+
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    id="cancelBatchOvertimeBtn"
+                    class="btn btn-secondary"
+                >
+                    取消
+                </button>
+
+
+                <button
+                    type="button"
+                    id="applyBatchOvertimeBtn"
+                    class="btn btn-accent"
+                >
+                    匯入加班
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Toast
+    ====================================================== -->
+
+    <div
+        id="toast"
+        class="toast"
+    >
+
+        <span id="toastMessage"></span>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         JS
+    ====================================================== -->
+
+    <script src="script.js"></script>
+
+</body>
+</html>
