@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>個人薪資計算器</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-text">
+        <span class="eyebrow">PERSONAL PAYROLL STUDIO</span>
+        <h1>個人薪資計算器</h1>
+        <p>整理出勤、加班與請假，試算這個計薪週期的薪資。</p>
+        <span class="local-badge">資料儲存在目前瀏覽器</span>
+      </div>
+      <div class="hero-art" role="img" aria-label="兩個可愛的 AI 伺服器機櫃"></div>
+    </header>
+
+    <main>
+      <section class="card" aria-labelledby="profile-title">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">01 / PROFILE</span>
+            <h2 id="profile-title">身分與存檔</h2>
+          </div>
+          <span id="saveStatus" class="status" aria-live="polite">尚未載入存檔</span>
+        </div>
+
+        <div class="form-grid profile-grid">
+          <label class="field">
+            <span>工號</span>
+            <input id="employeeId" type="text" autocomplete="off" placeholder="輸入工號">
+          </label>
+
+          <label class="field">
+            <span>驗證碼</span>
+            <input id="accessCode" type="password" autocomplete="off" placeholder="輸入自訂驗證碼">
+          </label>
+
+          <div class="field field-actions">
+            <span>資料操作</span>
+            <div class="button-row">
+              <button id="loadBtn" type="button" class="button secondary">讀取存檔</button>
+              <button id="saveBtn" type="button" class="button primary">儲存資料</button>
+            </div>
+          </div>
+        </div>
+
+        <p class="hint">首次使用時填入工號與自訂驗證碼，再按「儲存資料」。下次輸入相同資料並按「讀取存檔」。同一瀏覽器、同一裝置才能讀取。</p>
+
+        <div class="form-grid setup-grid">
+          <label class="field">
+            <span>身分 <em>必填</em></span>
+            <select id="employeeType">
+              <option value="regular-day">正職日班</option>
+              <option value="regular-night">正職夜班</option>
+              <option value="agency-day">派遣日班</option>
+              <option value="agency-night">派遣夜班</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>計薪開始日期 <em>必填</em></span>
+            <input id="periodStart" type="date">
+          </label>
+
+          <label class="field">
+            <span>計薪結束日期 <em>必填</em></span>
+            <input id="periodEnd" type="date">
+          </label>
+        </div>
+
+        <div class="button-row setup-actions">
+          <button id="defaultPeriodBtn" type="button" class="button subtle">套用預設週期</button>
+          <button id="generateBtn" type="button" class="button secondary">更新日曆</button>
+        </div>
+        <p id="periodLabel" class="period-label"></p>
+      </section>
+
+      <section id="regularInputs" class="card" aria-labelledby="regular-title">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">02 / REGULAR STAFF</span>
+            <h2 id="regular-title">正職薪資設定</h2>
+          </div>
+        </div>
+
+        <div class="input-panels">
+          <div class="input-panel">
+            <h3>薪資組成</h3>
+            <div class="form-grid">
+              <label class="field">
+                <span>底薪 <em>必填</em></span>
+                <div class="money-input">
+                  <span>NT$</span>
+                  <input id="baseSalary" type="number" min="0" step="1" inputmode="decimal" placeholder="輸入底薪">
+                </div>
+              </label>
+
+              <label class="field">
+                <span>伙食津貼</span>
+                <div class="money-input readonly">
+                  <span>NT$</span>
+                  <input type="text" value="3,000" readonly>
+                </div>
+              </label>
+
+              <label class="field">
+                <span>全勤獎金原額 <em>必填</em></span>
+                <div class="money-input">
+                  <span>NT$</span>
+                  <input id="attendanceBonus" type="number" min="0" step="1" inputmode="decimal" placeholder="輸入全勤獎金">
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="input-panel">
+            <h3>薪資扣項</h3>
+            <div class="form-grid">
+              <label class="field">
+                <span>勞保費 <em>必填</em></span>
+                <div class="money-input">
+                  <span>NT$</span>
+                  <input id="laborInsurance" type="number" min="0" step="1" inputmode="decimal" placeholder="輸入勞保費">
+                </div>
+              </label>
+
+              <label class="field">
+                <span>健保費 <em>必填</em></span>
+                <div class="money-input">
+                  <span>NT$</span>
+                  <input id="healthInsurance" type="number" min="0" step="1" inputmode="decimal" placeholder="輸入健保費">
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="agencyInputs" class="card" aria-labelledby="agency-title" hidden>
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">02 / AGENCY STAFF</span>
+            <h2 id="agency-title">派遣時薪設定</h2>
+          </div>
+        </div>
+
+        <div class="form-grid agency-grid">
+          <label class="field">
+            <span>常態時薪 <em>必填</em></span>
+            <div class="money-input">
+              <span>NT$</span>
+              <input id="hourlyWage" type="number" min="0" step="0.01" inputmode="decimal" placeholder="輸入常態時薪">
+            </div>
+          </label>
+
+          <label class="field">
+            <span>每小時出勤津貼 <em>必填</em></span>
+            <div class="money-input">
+              <span>NT$</span>
+              <input id="hourlyAllowance" type="number" min="0" step="0.01" inputmode="decimal" placeholder="輸入出勤津貼">
+            </div>
+            <small>請假時不發出勤津貼，包含全薪假。</small>
+          </label>
+        </div>
+
+        <div id="rateCards" class="rate-grid" aria-live="polite"></div>
+        <p class="hint">上方費率先四捨五入為整數，再用該整數費率乘以加班時數。</p>
+      </section>
+
+      <section class="card calendar-card" aria-labelledby="calendar-title">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">03 / ATTENDANCE</span>
+            <h2 id="calendar-title">出勤日曆</h2>
+            <p class="section-description">點選日期填寫當天資料。星期六預設休息日，星期日預設例假日。</p>
+          </div>
+        </div>
+
+        <div class="calendar-actions">
+          <button id="fullAttendanceBtn" type="button" class="button secondary">平日一鍵全勤</button>
+          <button id="bulkOvertimeBtn" type="button" class="button primary">批量匯入加班</button>
+        </div>
+
+        <div class="calendar-scroll">
+          <div class="calendar" id="calendar" aria-label="計薪週期日曆"></div>
+        </div>
+
+        <div class="calendar-legend">
+          <span class="legend-work">● 上班</span>
+          <span class="legend-overtime">● 加班</span>
+          <span class="legend-leave">● 請假</span>
+          <span class="legend-holiday">● 假日類別</span>
+        </div>
+      </section>
+
+      <section class="card results-card" aria-labelledby="results-title">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">04 / PAYROLL</span>
+            <h2 id="results-title">薪資試算結果</h2>
+          </div>
+        </div>
+
+        <div id="results" aria-live="polite">
+          <p class="empty-state">填寫薪資資料及日曆後，這裡會即時顯示試算結果。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>個人試算工具 · 實際薪資仍以公司薪資單為準</footer>
+  </div>
+
+  <dialog id="dayDialog" class="dialog">
+    <form id="dayForm">
+      <div class="dialog-heading">
+        <div>
+          <span class="section-kicker">DAILY ENTRY</span>
+          <h2 id="dayDialogTitle">編輯日期</h2>
+        </div>
+        <button type="button" class="icon-button" data-close="dayDialog" aria-label="關閉">×</button>
+      </div>
+
+      <label class="field">
+        <span>當日類別</span>
+        <select id="dayType">
+          <option value="weekday">平日</option>
+          <option value="rest">休息日</option>
+          <option value="regularHoliday">例假日</option>
+          <option value="nationalHoliday">國定假日</option>
+        </select>
+      </label>
+
+      <div id="weekdayFields">
+        <label class="field">
+          <span>上班時數</span>
+          <input id="workHours" type="number" min="0" max="8" step="0.5" inputmode="decimal" placeholder="例如 8">
+        </label>
+
+        <label class="field">
+          <span>假別</span>
+          <select id="leaveType">
+            <option value="">無請假</option>
+            <option value="annual">特休</option>
+            <option value="personal">事假</option>
+            <option value="sick">病假</option>
+            <option value="menstrual">生理假</option>
+            <option value="family">家庭照顧假</option>
+            <option value="official">公假</option>
+            <option value="marriage">婚假</option>
+            <option value="bereavement">喪假</option>
+            <option value="injury">公傷假</option>
+            <option value="maternity">產假</option>
+            <option value="prenatal">產檢假</option>
+            <option value="paternity">陪產檢及陪產假</option>
+            <option value="disaster">天然災害假</option>
+            <option value="absence">曠職</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>請假時數</span>
+          <input id="leaveHours" type="number" min="0" max="8" step="0.5" inputmode="decimal" placeholder="沒有請假可留空">
+        </label>
+
+        <p class="hint">若有請假，上班時數會自動調整，使上班＋請假合計為 8 小時。全天未出勤且未請假，可以將上班時數設為 0。</p>
+      </div>
+
+      <label class="field">
+        <span>加班時數</span>
+        <input id="overtimeHours" type="number" min="0" max="24" step="0.5" inputmode="decimal" placeholder="沒有加班可留空">
+      </label>
+
+      <p id="dayError" class="form-error" role="alert"></p>
+
+      <div class="dialog-actions">
+        <button id="clearDayBtn" type="button" class="button danger">清除當日填寫</button>
+        <button type="button" class="button subtle" data-close="dayDialog">取消</button>
+        <button type="submit" class="button primary">儲存當日</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="bulkDialog" class="dialog bulk-dialog">
+    <div class="dialog-heading">
+      <div>
+        <span class="section-kicker">BULK OVERTIME</span>
+        <h2>批量匯入加班</h2>
+      </div>
+      <button type="button" class="icon-button" data-close="bulkDialog" aria-label="關閉">×</button>
+    </div>
+
+    <label class="field">
+      <span>這些日期共同的加班時數</span>
+      <input id="bulkHours" type="number" min="0" max="24" step="0.5" inputmode="decimal" placeholder="例如 2">
+    </label>
+
+    <p class="hint">選好日期後按匯入。已填寫的上班與請假資料會保留；所選日期原有的加班時數會被這次的時數取代。</p>
+
+    <div class="bulk-toolbar">
+      <span id="bulkCount">已選 0 天</span>
+      <button id="bulkSelectWeekdays" type="button" class="text-button">選取全部平日</button>
+      <button id="bulkClearSelection" type="button" class="text-button">清除選取</button>
+    </div>
+
+    <div id="bulkDates" class="bulk-dates"></div>
+    <p id="bulkError" class="form-error" role="alert"></p>
+
+    <div class="dialog-actions">
+      <button type="button" class="button subtle" data-close="bulkDialog">取消</button>
+      <button id="applyBulkBtn" type="button" class="button primary">匯入所選日期</button>
+    </div>
+  </dialog>
+</body>
+</html>
